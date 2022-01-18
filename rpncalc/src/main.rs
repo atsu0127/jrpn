@@ -3,6 +3,7 @@ use anyhow::{ bail, ensure, Context, Result };
 use clap::Parser;
 use std::fs::File;
 use std::io::{BufRead, BufReader, stdin};
+use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
 #[clap(
@@ -18,7 +19,7 @@ struct Opts {
 
     /// Formulas written in RPN
     #[clap(name = "FILE")]
-    formula_file: Option<String>,
+    formula_file: Option<PathBuf>,
 }
 
 fn main() -> Result<()> {
