@@ -14,7 +14,7 @@ pub async fn get_todos() -> impl Responder {
 }
 
 #[get("/todos/{id}")]
-pub async fn get_todo_by_id(web::Path(id): web::Path<u32>) -> impl Responder {
+pub async fn get_todo_by_id(web::Path(id): web::Path<i32>) -> impl Responder {
     println!("called get_todo_by_id: {}", id);
     match repositories::get_todo_by_id(id) {
         Ok(todos) => HttpResponse::Ok().json(todos),
