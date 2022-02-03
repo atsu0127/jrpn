@@ -1,4 +1,5 @@
 use crate::schema::todo;
+use serde::{ Serialize, Deserialize };
 
 #[derive(Insertable)]
 #[table_name = "todo"]
@@ -7,7 +8,7 @@ pub struct NewTodo {
     pub content: String,
 }
 
-#[derive(Debug, Queryable)]
+#[derive(Debug, Queryable, Serialize, Deserialize)]
 pub struct Todo {
     pub id: i32,
     pub title: Option<String>,
