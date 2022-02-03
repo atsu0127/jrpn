@@ -20,6 +20,10 @@ mysql -h 127.0.0.1 -P 3306 -u appuser -p
 ```bash
 cd ..
 
+## .envを適切に書き換えてください
+## passに特殊文字がある場合はURLエンコードしてください
+echo 'DATABASE_URL=mysql://<user>:<pass>@<host>:<port>/<db>' > .env
+
 ## 初期動作
 diesel migration run
 
