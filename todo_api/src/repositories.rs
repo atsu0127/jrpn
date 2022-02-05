@@ -1,5 +1,5 @@
 use crate::utils;
-use crate::models::Todo;
+use crate::models::{NewTodo, Todo};
 use crate::schema::todo as todo_schema;
 use diesel::prelude::*;
 use anyhow::{Context, Result};
@@ -18,4 +18,15 @@ pub fn get_todos(id: Option<i32>) -> Result<Vec<Todo>> {
         })?;
 
     Ok(todo)
+}
+
+pub fn insert_todo(todo: NewTodo) -> Result<()> {
+    let connection = utils::establish_connection()?;
+    diesel::insert_into(todo_schema::dsl::todo)
+        .values(&todo)
+        .execute(&connection)
+        .with_context(|| {
+            format!("insert error. todo: {}", todo.title)
+        })?;
+    Ok(())
 }
