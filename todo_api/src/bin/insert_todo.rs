@@ -4,7 +4,7 @@ use todo_api::models::NewTodo;
 use todo_api::schema::todo as todo_schema;
 
 fn main() {
-    let connection = utils::establish_connection();
+    let connection = utils::establish_connection().expect("error getting conn");
     let new_todos = vec![
         NewTodo {
             title: "new title2".to_string(),
