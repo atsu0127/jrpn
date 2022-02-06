@@ -1,5 +1,5 @@
 use crate::repositories;
-use actix_web::{HttpResponse, Responder, get, post, put, web};
+use actix_web::{HttpResponse, Responder, get, post, put, delete, web};
 use crate::models::NewTodo;
 
 #[get("/todos")]
@@ -43,6 +43,18 @@ pub async fn post_todo(todo: web::Json<NewTodo>) -> impl Responder {
 pub async fn put_todo(web::Path(id): web::Path<i32>, web::Json(todo): web::Json<NewTodo>) -> impl Responder {
     println!("put todo: {:?}", todo);
     match repositories::update_todo(id, todo) {
+        Ok(_) => HttpResponse::Ok().finish(),
+        Err(err) => {
+            eprintln!("error: {:?}", err);
+            HttpResponse::InternalServerError().finish()
+        }
+    }
+}
+
+#[delete("/todos/{id}")]
+pub async fn delete_todo(web::Path(id): web::Path<i32>) -> impl Responder {
+    println!("put todo: {:?}", id);
+    match repositories::delete_todo(id) {
         Ok(_) => HttpResponse::Ok().finish(),
         Err(err) => {
             eprintln!("error: {:?}", err);

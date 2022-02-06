@@ -10,6 +10,7 @@ async fn main() -> Result<()> {
             .service(controllers::get_todo_by_id)
             .service(controllers::post_todo)
             .service(controllers::put_todo)
+            .service(controllers::delete_todo)
     )
         .bind("127.0.0.1:8081")?
         .run()
