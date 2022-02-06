@@ -1,7 +1,7 @@
 use crate::schema::todo;
 use serde::{ Serialize, Deserialize };
 
-#[derive(Insertable, Debug, Deserialize, Serialize)]
+#[derive(Insertable, AsChangeset, Debug, Deserialize, Serialize)]
 #[table_name = "todo"]
 pub struct NewTodo {
     pub title: String,

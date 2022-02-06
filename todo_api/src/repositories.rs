@@ -30,3 +30,14 @@ pub fn insert_todo(todo: NewTodo) -> Result<()> {
         })?;
     Ok(())
 }
+
+pub fn update_todo(id: i32, todo: NewTodo) -> Result<()> {
+    let connection = utils::establish_connection()?;
+    diesel::update(todo_schema::dsl::todo.find(id))
+        .set(&todo)
+        .execute(&connection)
+        .with_context(|| {
+            format!("update error. todo: {}", id)
+        })?;
+    Ok(())
+}
