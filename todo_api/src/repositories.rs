@@ -3,12 +3,29 @@ use crate::models::{NewTodo, Todo};
 use crate::schema::todo as todo_schema;
 use diesel::prelude::*;
 use anyhow::{Context, Result};
+use serde::Deserialize;
 
-pub fn get_todos(id: Option<i32>) -> Result<Vec<Todo>> {
+#[derive(Debug, Deserialize)]
+pub struct SearchInfo {
+    title: Option<String>,
+    content: Option<String>,
+}
+
+pub fn get_todos(id: Option<i32>, info: Option<SearchInfo>) -> Result<Vec<Todo>> {
     let connection = utils::establish_connection()?;
     let mut query = todo_schema::dsl::todo.into_boxed();
     if let Some(id) = id {
         query = query.filter(todo_schema::id.eq(id));
+    }
+
+    if let Some(info) = info {
+        if let Some(title) = info.title {
+            query = query.filter(todo_schema::title.like(format!("%{}%", title)));
+        }
+
+        if let Some(content) = info.content {
+            query = query.filter(todo_schema::content.like(format!("%{}%", content)));
+        }
     }
 
     let todo = query

@@ -1,11 +1,12 @@
 use crate::repositories;
-use actix_web::{HttpResponse, Responder, get, post, put, delete, web};
+use actix_web::{HttpResponse, Responder, get, post, patch, delete, web};
 use crate::models::NewTodo;
+use crate::repositories::SearchInfo;
 
 #[get("/todos")]
-pub async fn get_todos() -> impl Responder {
+pub async fn get_todos(web::Query(info): web::Query<SearchInfo>) -> impl Responder {
     println!("called get_todos");
-    match repositories::get_todos(None) {
+    match repositories::get_todos(None, Some(info)) {
         Ok(todos) => HttpResponse::Ok().json(todos),
         Err(err) => {
             eprintln!("error: {:?}", err);
@@ -17,7 +18,7 @@ pub async fn get_todos() -> impl Responder {
 #[get("/todos/{id}")]
 pub async fn get_todo_by_id(web::Path(id): web::Path<i32>) -> impl Responder {
     println!("called get_todo_by_id: {}", id);
-    match repositories::get_todos(Some(id)) {
+    match repositories::get_todos(Some(id), None) {
         Ok(todos) => HttpResponse::Ok().json(todos),
         Err(err) => {
             eprintln!("error: {:?}", err);
@@ -39,9 +40,9 @@ pub async fn post_todo(todo: web::Json<NewTodo>) -> impl Responder {
     }
 }
 
-#[put("/todos/{id}")]
+#[patch("/todos/{id}")]
 pub async fn put_todo(web::Path(id): web::Path<i32>, web::Json(todo): web::Json<NewTodo>) -> impl Responder {
-    println!("put todo: {:?}", todo);
+    println!("patch todo: {:?}", todo);
     match repositories::update_todo(id, todo) {
         Ok(_) => HttpResponse::Ok().finish(),
         Err(err) => {
